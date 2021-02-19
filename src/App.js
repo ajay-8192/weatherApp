@@ -1,6 +1,5 @@
 import './App.css';
-import https from 'https';
-import { Component } from 'react';
+import React, { Component } from 'react';
 
 const api_key = 'd5dffb4be1ef4856e606fa1d6044221c'
 const place='Kanigiri';
@@ -20,11 +19,10 @@ class App extends Component {
   }
 
   componentDidMount() {
-    https.get(api_5place, (resp) => {
-      console.log(resp.statusCode);
-  
-      resp.on('data', data => {
-          const weatherData = JSON.parse(data);
+
+    fetch(api_5place).then(res => res.json())
+    .then(data => {
+      const weatherData = data;
           
           const weatherapp = []
           for (let weather of weatherData["list"]) {
@@ -41,19 +39,19 @@ class App extends Component {
               date_txt: date_txt
             })
           }
-          console.log(weatherapp);
+          // console.log(weatherapp);
           this.setState({
               weather: [...weatherapp]
           })
-      })
-  })
+    })
   }
 
   render() {
     const { weather } = this.state;
-    console.log(this.state);
+    // console.log(this.state);
+    let id = 0;
     const details = weather.map(element => 
-        <div key={element}>
+        <div key={id++}>
           <h1>The temperature in {place} is {element.temp} deg celsius.</h1>
           <h3>The weather is currently {element.weatherDescription}</h3>
           <img src={element.imageURL} alt="weather condition" />
